@@ -1,5 +1,7 @@
 package scooter;
 
+import com.github.javafaker.Faker;
+
 public class Order {
     private String firstName;
     private String lastName;
@@ -12,14 +14,16 @@ public class Order {
     private String[] color;
 
     public Order(String firstName, String lastName, String address, String metroStation, String phone, int rentTime, String deliveryDate, String comment, String[] color) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.metroStation = metroStation;
-        this.phone = phone;
-        this.rentTime = rentTime;
-        this.deliveryDate = deliveryDate;
-        this.comment = comment;
+        Faker faker = new Faker();
+
+        this.firstName = faker.name().firstName();
+        this.lastName = faker.name().lastName();
+        this.address = faker.address().fullAddress();
+        this.metroStation = faker.address().streetName();
+        this.phone = faker.phoneNumber().phoneNumber();
+        this.rentTime = faker.number().numberBetween(1, 7);
+        this.deliveryDate = faker.date().toString();
+        this.comment = faker.beer().name();
         this.color = color;
     }
 

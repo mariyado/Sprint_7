@@ -1,5 +1,7 @@
 package scooter;
 
+import com.github.javafaker.Faker;
+
 public class CreateCourier {
 
     private String login;
@@ -29,13 +31,15 @@ public class CreateCourier {
         return firstName;
     }
 
-    public CreateCourier(String login, String password, String firstName) {
-        this.login = login;
-        this.password = password;
-        this.firstName = firstName;
+    public CreateCourier() {
+        Faker faker = new Faker();
+
+        this.login = faker.name().username();
+        this.password = faker.internet().password();
+        this.firstName = faker.name().name();
     }
 
-    public CreateCourier() {
-    }
+    //public CreateCourier() {
+   // }
 
 }

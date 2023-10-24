@@ -1,3 +1,4 @@
+import com.github.javafaker.Faker;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import scooter.CreateCourier;
@@ -10,17 +11,19 @@ import static org.hamcrest.CoreMatchers.*;
 
 public class LoginCourierTest {
 
-    CreateCourier newCourier;
     LoginCourier loginData;
-    String loginCourier = "Courier178";
-    String password = "123";
-    String firstName = "Ivan";
+    String loginCourier;
+    String password;
+
+    CreateCourier courier;
 
     @Before
     public void setUp() {
         RestAssured.baseURI= BaseUri.URI;
-        newCourier = new CreateCourier(loginCourier, password, firstName);
-        Steps.createCourier(newCourier);
+        courier = new CreateCourier();
+        loginCourier = courier.getLogin();
+        password = courier.getPassword();
+        Steps.createCourier(courier);
     }
 
     @Test
@@ -56,7 +59,10 @@ public class LoginCourierTest {
     @Test
     @DisplayName("loginCourierNotCorrectDataTest")
     public void loginCourierNotCorrectDataTest() {
-        loginData  = new LoginCourier("jfgfgfjgh", "34545");
+        Faker faker = new Faker();
+        String newLogin = faker.name().username();
+        String newPassword = faker.internet().password();
+        loginData  = new LoginCourier(newLogin, newPassword);
 
         Response response = Steps.loginCourier(loginData);
         response.then()

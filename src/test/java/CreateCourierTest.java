@@ -9,38 +9,45 @@ import static org.hamcrest.CoreMatchers.is;
 public class CreateCourierTest extends BaseTest{
     CreateCourier newCourier;
 
-    String loginCourier = "Courier178"; //логин создаваемого курьера
-    String password = "123"; //пароль создаваемого курьера
-    String firstName = "Ivan";
+    String loginCourier;
+    String password;
+    String firstName;
 
 
     @Test
     @DisplayName("createCourierTest")
     public void createCourierTest() {
-        newCourier = new CreateCourier(loginCourier, password, firstName);
+        newCourier = new CreateCourier();
         Response response = Steps.createCourier(newCourier);
         response.then()
                 .assertThat().statusCode(equalTo(201))
                 .assertThat().body("ok", is(true));
+
+        loginCourier = newCourier.getLogin();
+        password = newCourier.getPassword();
+
         Steps.deleteCourier(loginCourier, password);
     }
 
     @Test
     @DisplayName("createSameCourierTest")
     public void createSameCourierTest() {
-        newCourier = new CreateCourier(loginCourier, password, firstName);
+        newCourier = new CreateCourier();
         Response response = Steps.createCourier(newCourier);
         response.then().assertThat().statusCode(equalTo(201));
-        newCourier = new CreateCourier(loginCourier, password, firstName);
         Response responseThatCourierIsNotCreate = Steps.createCourier(newCourier);
         responseThatCourierIsNotCreate.then().assertThat().statusCode(equalTo(409));
+
+        loginCourier = newCourier.getLogin();
+        password = newCourier.getPassword();
         Steps.deleteCourier(loginCourier, password);
     }
 
     @Test
     @DisplayName("createCourierWithoutLoginTest")
     public void createCourierWithoutLoginTest() {
-        newCourier = new CreateCourier(null, password, firstName);
+        newCourier = new CreateCourier();
+        newCourier.setLogin(null);
         Response response = Steps.createCourier(newCourier);
         response.then().assertThat().statusCode(equalTo(400));
     }
@@ -48,7 +55,8 @@ public class CreateCourierTest extends BaseTest{
     @Test
     @DisplayName("createCourierWithoutPasswordTest")
     public void createCourierWithoutPasswordTest() {
-        newCourier = new CreateCourier(loginCourier, null, firstName);
+        newCourier = new CreateCourier();
+        newCourier.setPassword(null);
         Response response = Steps.createCourier(newCourier);
         response.then().assertThat().statusCode(equalTo(400));
     }
@@ -56,7 +64,9 @@ public class CreateCourierTest extends BaseTest{
     @Test
     @DisplayName("createCourierWithoutLoginAndPasswordTest")
     public void createCourierWithoutLoginAndPasswordTest() {
-        CreateCourier newCourier = new CreateCourier("", "", firstName);
+        CreateCourier newCourier = new CreateCourier();
+        newCourier.setPassword(null);
+        newCourier.setLogin(null);
         Response response = Steps.createCourier(newCourier);
         response.then().assertThat().statusCode(equalTo(400));
     }

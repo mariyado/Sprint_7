@@ -31,7 +31,7 @@ public class CreateOrderTest extends BaseTest{
     @Test
     @DisplayName("makeOrderTest")
     public void makeOrderTest() {
-        order = new Order("Ольга", "Смирнова", "Ул. Филатова 10", "Пионерская", "+79185555555", 1, "2023-10-28", "нет", color);
+        order = new Order();
         Response response = Steps.newOrder(order);
         response.then()
                 .assertThat().statusCode(equalTo(201)).body("track", notNullValue());
